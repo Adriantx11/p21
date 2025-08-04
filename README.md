@@ -80,6 +80,35 @@ pnpm dev
 pnpm dev
 ```
 
+## 🚀 Despliegue en Vercel
+
+### 1. Preparar para Vercel
+```bash
+# Asegúrate de estar en la raíz del proyecto
+npm run build
+```
+
+### 2. Variables de Entorno en Vercel
+Agrega estas variables en tu dashboard de Vercel:
+- `VITE_API_URL`: URL de tu backend (ej: https://tu-backend.onrender.com/api)
+- `VITE_APP_NAME`: Galaxy Subscriptions Dashboard
+- `VITE_APP_VERSION`: 1.0.0
+
+### 3. Desplegar
+```bash
+# Instalar Vercel CLI
+npm i -g vercel
+
+# Login
+vercel login
+
+# Desplegar
+vercel
+
+# Desplegar a producción
+vercel --prod
+```
+
 ## 🔐 Autenticación y Roles
 
 ### Usuarios

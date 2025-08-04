@@ -1,0 +1,16 @@
+# Vercel Environment Variables
+# Add these in your Vercel dashboard under Settings > Environment Variables
+
+# API Configuration
+VITE_API_URL=https://tu-backend-en-render.onrender.com/api
+
+# App Configuration
+VITE_APP_NAME=Galaxy Subscriptions Dashboard
+VITE_APP_VERSION=1.0.0
+
+# Instructions:
+# 1. Go to your Vercel project dashboard
+# 2. Navigate to Settings > Environment Variables
+# 3. Add each variable above
+# 4. Replace 'tu-backend-en-render.onrender.com' with your actual backend URL
+# 5. Deploy your project 
