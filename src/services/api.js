@@ -1,6 +1,10 @@
 // API Base URL - Updated for production deployment
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
+// Debug: Log the API URL to verify environment variable
+console.log('API Base URL:', API_BASE_URL);
+console.log('Environment VITE_API_URL:', import.meta.env.VITE_API_URL);
+
 class ApiService {
   constructor() {
     this.baseURL = API_BASE_URL;
