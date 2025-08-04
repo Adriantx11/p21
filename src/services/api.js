@@ -1,5 +1,5 @@
 // API Base URL - Updated for production deployment
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://p21-fwce.onrender.com/api';
 
 // Debug: Log the API URL to verify environment variable
 console.log('API Base URL:', API_BASE_URL);
