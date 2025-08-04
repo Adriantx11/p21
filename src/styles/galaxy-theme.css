@@ -1,0 +1,147 @@
+/* Galaxy Theme Styles */
+
+.galaxy-background {
+  background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+  position: relative;
+  overflow: hidden;
+  color: #e0e0ff;
+}
+
+.galaxy-background::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(white, rgba(255,255,255,0) 2px),
+    radial-gradient(white, rgba(255,255,255,0) 1px);
+  background-size: 50px 50px, 30px 30px;
+  background-position: 0 0, 25px 25px;
+  opacity: 0.1;
+  animation: twinkle 7s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes twinkle {
+  0% {
+    opacity: 0.1;
+  }
+  50% {
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 0.1;
+  }
+}
+
+/* Nebula Effect */
+.galaxy-background::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(100, 0, 255, 0.15) 0%, transparent 40%),
+    radial-gradient(circle at 80% 30%, rgba(0, 100, 255, 0.15) 0%, transparent 35%),
+    radial-gradient(circle at 40% 70%, rgba(150, 0, 100, 0.15) 0%, transparent 40%),
+    radial-gradient(circle at 70% 80%, rgba(50, 0, 150, 0.15) 0%, transparent 35%);
+  pointer-events: none;
+}
+
+/* Customize headers and components for dark theme */
+header.bg-white {
+  background-color: rgba(20, 17, 45, 0.8) !important;
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(124, 58, 237, 0.3);
+  color: #e0e0ff;
+}
+
+header .text-indigo-600 {
+  color: #a78bfa !important;
+}
+
+header .text-gray-500 {
+  color: #c7d2fe !important;
+}
+
+header .hover\:bg-gray-100:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+aside.bg-white {
+  background-color: rgba(20, 17, 45, 0.8) !important;
+  backdrop-filter: blur(10px);
+  border-right: 1px solid rgba(124, 58, 237, 0.3);
+}
+
+aside .text-gray-600 {
+  color: #c7d2fe !important;
+}
+
+aside .hover\:bg-gray-50:hover {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+aside .bg-indigo-50 {
+  background-color: rgba(124, 58, 237, 0.2) !important;
+}
+
+aside .text-indigo-700 {
+  color: #c4b5fd !important;
+}
+
+/* Stats card customization */
+.bg-white {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.text-gray-800 {
+  color: #e0e0ff !important;
+}
+
+.text-gray-700 {
+  color: #c7d2fe !important;
+}
+
+.text-gray-600 {
+  color: #a5b4fc !important;
+}
+
+.text-gray-500 {
+  color: #818cf8 !important;
+}
+
+/* Login/Register pages */
+.login-page, .register-page {
+  background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Enhanced scroll bars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(20, 17, 45, 0.5);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(124, 58, 237, 0.5);
+  border-radius: 10px;
+  transition: all 0.3s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(124, 58, 237, 0.7);
+}
