@@ -32,7 +32,10 @@ app.use(cors({
       'http://localhost:5173',
       'http://localhost:3000',
       'https://h21-ten.vercel.app',
-      'https://h21-bgoyab3s1-pruebas-projects-97f8a775.vercel.app'
+      'https://h21-bgoyab3s1-pruebas-projects-97f8a775.vercel.app',
+      'https://p21-eight.vercel.app',
+      'https://p21-nkgoqf30y-pruebas-projects-97f8a775.vercel.app',
+      'https://p21.vercel.app'
     ];
     
     // Check if origin is in allowed list or is a Vercel domain
