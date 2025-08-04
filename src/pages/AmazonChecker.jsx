@@ -153,11 +153,11 @@ const AmazonChecker = () => {
   };
 
   const getStatusColor = (status) => {
-    if (status.includes('Approved')) return 'text-green-600';
-    if (status.includes('Declined')) return 'text-red-600';
-    if (status.includes('Address Required')) return 'text-yellow-600';
-    if (status.includes('Invalid Cookies')) return 'text-orange-600';
-    return 'text-gray-600';
+    if (status.includes('Approved') || status.includes('Live')) return 'text-green-600 bg-green-50 border-green-200';
+    if (status.includes('Declined') || status.includes('Dead')) return 'text-red-600 bg-red-50 border-red-200';
+    if (status.includes('Address Required')) return 'text-yellow-600 bg-yellow-50 border-yellow-200';
+    if (status.includes('Invalid Cookies')) return 'text-orange-600 bg-orange-50 border-orange-200';
+    return 'text-gray-600 bg-gray-50 border-gray-200';
   };
 
   const exportResults = () => {
@@ -210,21 +210,21 @@ const AmazonChecker = () => {
       {/* Stats Cards */}
       {stats && (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <h3 className="text-sm font-medium text-gray-500">Total Checks</h3>
-            <p className="text-2xl font-bold text-gray-900">{stats.totalChecks}</p>
+          <div className="bg-gradient-to-br from-blue-50 to-indigo-100 p-4 rounded-lg shadow-sm border border-blue-200">
+            <h3 className="text-sm font-medium text-blue-600">Total Checks</h3>
+            <p className="text-2xl font-bold text-blue-800">{stats.totalChecks}</p>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <h3 className="text-sm font-medium text-gray-500">Approved</h3>
-            <p className="text-2xl font-bold text-green-600">{stats.approvedCards}</p>
+          <div className="bg-gradient-to-br from-green-50 to-emerald-100 p-4 rounded-lg shadow-sm border border-green-200">
+            <h3 className="text-sm font-medium text-green-600">Live Cards</h3>
+            <p className="text-2xl font-bold text-green-800">{stats.approvedCards}</p>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <h3 className="text-sm font-medium text-gray-500">Declined</h3>
-            <p className="text-2xl font-bold text-red-600">{stats.declinedCards}</p>
+          <div className="bg-gradient-to-br from-red-50 to-rose-100 p-4 rounded-lg shadow-sm border border-red-200">
+            <h3 className="text-sm font-medium text-red-600">Dead Cards</h3>
+            <p className="text-2xl font-bold text-red-800">{stats.declinedCards}</p>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <h3 className="text-sm font-medium text-gray-500">Success Rate</h3>
-            <p className="text-2xl font-bold text-blue-600">{stats.successRate}%</p>
+          <div className="bg-gradient-to-br from-purple-50 to-violet-100 p-4 rounded-lg shadow-sm border border-purple-200">
+            <h3 className="text-sm font-medium text-purple-600">Success Rate</h3>
+            <p className="text-2xl font-bold text-purple-800">{stats.successRate}%</p>
           </div>
         </div>
       )}
@@ -317,16 +317,30 @@ const AmazonChecker = () => {
             <button
               onClick={() => checkCards(false)}
               disabled={loading || cookieStatus === 'inactive'}
-              className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 disabled:opacity-50"
+              className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-3 rounded-lg hover:from-green-600 hover:to-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium shadow-lg transition-all duration-200 transform hover:scale-105"
             >
-              {loading ? 'Verificando...' : 'Verificar con Cookie Standard'}
+              {loading ? (
+                <div className="flex items-center">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Verificando...
+                </div>
+              ) : (
+                '🔍 Verificar con Cookie Standard'
+              )}
             </button>
             <button
               onClick={() => checkCards(true)}
               disabled={loading || regionalCookieStatus === 'inactive'}
-              className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 disabled:opacity-50"
+              className="bg-gradient-to-r from-purple-500 to-violet-600 text-white px-6 py-3 rounded-lg hover:from-purple-600 hover:to-violet-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium shadow-lg transition-all duration-200 transform hover:scale-105"
             >
-              {loading ? 'Verificando...' : 'Verificar con Cookie Regional'}
+              {loading ? (
+                <div className="flex items-center">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Verificando...
+                </div>
+              ) : (
+                '🌍 Verificar con Cookie Regional'
+              )}
             </button>
           </div>
         </div>
@@ -345,30 +359,30 @@ const AmazonChecker = () => {
             </button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <div className="bg-green-50 p-4 rounded-lg">
+            <div className="bg-gradient-to-br from-green-50 to-emerald-100 p-4 rounded-lg border border-green-200 shadow-sm">
               <div className="flex items-center">
-                <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
-                <span className="font-medium text-green-800">Live</span>
+                <div className="w-3 h-3 bg-green-500 rounded-full mr-2 animate-pulse"></div>
+                <span className="font-medium text-green-800">Live Cards</span>
               </div>
-              <p className="text-2xl font-bold text-green-600">
+              <p className="text-2xl font-bold text-green-800">
                 {results.filter(r => r.status.includes('Approved')).length}
               </p>
             </div>
-            <div className="bg-red-50 p-4 rounded-lg">
+            <div className="bg-gradient-to-br from-red-50 to-rose-100 p-4 rounded-lg border border-red-200 shadow-sm">
               <div className="flex items-center">
                 <div className="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
-                <span className="font-medium text-red-800">Decline</span>
+                <span className="font-medium text-red-800">Dead Cards</span>
               </div>
-              <p className="text-2xl font-bold text-red-600">
+              <p className="text-2xl font-bold text-red-800">
                 {results.filter(r => r.status.includes('Declined')).length}
               </p>
             </div>
-            <div className="bg-yellow-50 p-4 rounded-lg">
+            <div className="bg-gradient-to-br from-yellow-50 to-amber-100 p-4 rounded-lg border border-yellow-200 shadow-sm">
               <div className="flex items-center">
                 <div className="w-3 h-3 bg-yellow-500 rounded-full mr-2"></div>
-                <span className="font-medium text-yellow-800">Otros</span>
+                <span className="font-medium text-yellow-800">Unknown</span>
               </div>
-              <p className="text-2xl font-bold text-yellow-600">
+              <p className="text-2xl font-bold text-yellow-800">
                 {results.filter(r => !r.status.includes('Approved') && !r.status.includes('Declined')).length}
               </p>
             </div>
