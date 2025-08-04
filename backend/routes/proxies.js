@@ -7,7 +7,7 @@ const router = express.Router();
 // Middleware para verificar si el usuario es admin
 const checkAdminAccess = async (req, res, next) => {
   try {
-    if (!req.user.isAdmin) {
+    if (req.user.role !== 'admin') {
       return res.status(403).json({ message: 'Acceso denegado. Se requieren permisos de administrador.' });
     }
     next();

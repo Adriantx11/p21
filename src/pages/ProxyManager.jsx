@@ -3,7 +3,7 @@ import { useAuth } from '../context/useAuth';
 import apiService from '../services/api';
 
 const ProxyManager = () => {
-  const { currentUser } = useAuth();
+  const { currentUser, isAdmin } = useAuth();
   const [proxies, setProxies] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -12,6 +12,12 @@ const ProxyManager = () => {
   const [showImportForm, setShowImportForm] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  
+  // Debug logs
+  console.log('🔍 ProxyManager Debug:');
+  console.log('Current User:', currentUser);
+  console.log('Is Admin:', isAdmin());
+  console.log('User Role:', currentUser?.role);
   
   // Form states
   const [newProxy, setNewProxy] = useState({
