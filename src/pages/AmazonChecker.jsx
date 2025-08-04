@@ -5,16 +5,19 @@ import apiService from '../services/api';
 const AmazonChecker = () => {
   const { currentUser } = useAuth();
   const [cookie, setCookie] = useState('');
+  const [regionalCookie, setRegionalCookie] = useState('');
   const [cards, setCards] = useState('');
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [stats, setStats] = useState(null);
   const [cookieStatus, setCookieStatus] = useState('inactive');
+  const [regionalCookieStatus, setRegionalCookieStatus] = useState('inactive');
   const [message, setMessage] = useState('');
 
   useEffect(() => {
     loadStats();
     checkCookieStatus();
+    checkRegionalCookieStatus();
   }, []);
 
   const loadStats = async () => {
@@ -33,6 +36,16 @@ const AmazonChecker = () => {
       setCookie(response.cookie);
     } catch (error) {
       setCookieStatus('inactive');
+    }
+  };
+
+  const checkRegionalCookieStatus = async () => {
+    try {
+      const response = await apiService.getAmazonRegionalCookie();
+      setRegionalCookieStatus('active');
+      setRegionalCookie(response.cookie);
+    } catch (error) {
+      setRegionalCookieStatus('inactive');
     }
   };
 
@@ -55,9 +68,39 @@ const AmazonChecker = () => {
     }
   };
 
-  const checkCards = async () => {
+  const saveRegionalCookie = async () => {
+    if (!regionalCookie.trim()) {
+      setMessage('Por favor ingresa una cookie regional válida');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await apiService.saveAmazonRegionalCookie(regionalCookie);
+      setMessage('Cookie regional guardada correctamente');
+      setRegionalCookieStatus('active');
+      loadStats();
+    } catch (error) {
+      setMessage(error.response?.data?.message || 'Error al guardar cookie regional');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const checkCards = async (useRegionalCookie = false) => {
     if (!cards.trim()) {
       setMessage('Por favor ingresa las tarjetas a verificar');
+      return;
+    }
+
+    // Check if we have the appropriate cookie
+    if (!useRegionalCookie && cookieStatus !== 'active') {
+      setMessage('No tienes una cookie activa. Guarda una cookie primero.');
+      return;
+    }
+
+    if (useRegionalCookie && regionalCookieStatus !== 'active') {
+      setMessage('No tienes una cookie regional activa. Guarda una cookie regional primero.');
       return;
     }
 
@@ -77,9 +120,18 @@ const AmazonChecker = () => {
     setResults([]);
 
     try {
-      const response = await apiService.post('/amazon/check-cards', { cards: cardList });
-      setResults(response.results);
-      setMessage(`Verificación completada. ${response.totalCards} tarjetas procesadas.`);
+      let response;
+      
+      if (useRegionalCookie) {
+        // Use regional cookie API endpoint
+        response = await apiService.checkCardsWithRegionalCookie(cardList);
+      } else {
+        // Use standard cookie API endpoint
+        response = await apiService.post('/amazon/check-cards', { cards: cardList });
+      }
+      
+      setResults(response.results || []);
+      setMessage(`Verificación completada. ${response.totalCards || response.results.length} tarjetas procesadas.`);
       loadStats();
     } catch (error) {
       if (error.response?.data?.requiresUpgrade) {
@@ -180,25 +232,64 @@ const AmazonChecker = () => {
       {/* Cookie Management */}
       <div className="bg-white p-6 rounded-lg shadow-sm">
         <h2 className="text-lg font-medium text-gray-800 mb-4">Cookie Management</h2>
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+        
+        {/* Standard Amazon Cookie */}
+        <div className="space-y-4 mb-6">
+          <div className="flex items-center justify-between mb-2">
+            <label className="block text-sm font-medium text-gray-700">
               Amazon Cookie
             </label>
-            <textarea
-              value={cookie}
-              onChange={(e) => setCookie(e.target.value)}
-              placeholder="Pega tu cookie de Amazon aquí..."
-              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-              rows="3"
-            />
+            <div className={`px-3 py-1 rounded-full text-xs font-medium ${
+              cookieStatus === 'active' 
+                ? 'bg-green-100 text-green-800' 
+                : 'bg-red-100 text-red-800'
+            }`}>
+              {cookieStatus === 'active' ? 'Activa' : 'Inactiva'}
+            </div>
           </div>
+          <textarea
+            value={cookie}
+            onChange={(e) => setCookie(e.target.value)}
+            placeholder="Pega tu cookie de Amazon aquí..."
+            className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            rows="3"
+          />
           <button
             onClick={saveCookie}
             disabled={loading}
             className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 disabled:opacity-50"
           >
             {loading ? 'Guardando...' : 'Guardar Cookie'}
+          </button>
+        </div>
+        
+        {/* Regional Amazon Cookie */}
+        <div className="space-y-4 pt-6 border-t border-gray-200">
+          <div className="flex items-center justify-between mb-2">
+            <label className="block text-sm font-medium text-gray-700">
+              Amazon Regional Cookie
+            </label>
+            <div className={`px-3 py-1 rounded-full text-xs font-medium ${
+              regionalCookieStatus === 'active' 
+                ? 'bg-green-100 text-green-800' 
+                : 'bg-red-100 text-red-800'
+            }`}>
+              {regionalCookieStatus === 'active' ? 'Activa' : 'Inactiva'}
+            </div>
+          </div>
+          <textarea
+            value={regionalCookie}
+            onChange={(e) => setRegionalCookie(e.target.value)}
+            placeholder="Pega tu cookie regional de Amazon aquí..."
+            className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            rows="3"
+          />
+          <button
+            onClick={saveRegionalCookie}
+            disabled={loading}
+            className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 disabled:opacity-50"
+          >
+            {loading ? 'Guardando...' : 'Guardar Cookie Regional'}
           </button>
         </div>
       </div>
@@ -222,13 +313,22 @@ const AmazonChecker = () => {
               Máximo 15 tarjetas por consulta. Una tarjeta por línea.
             </p>
           </div>
-          <button
-            onClick={checkCards}
-            disabled={loading || cookieStatus === 'inactive'}
-            className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 disabled:opacity-50"
-          >
-            {loading ? 'Verificando...' : 'Verificar Tarjetas'}
-          </button>
+          <div className="flex space-x-4">
+            <button
+              onClick={() => checkCards(false)}
+              disabled={loading || cookieStatus === 'inactive'}
+              className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 disabled:opacity-50"
+            >
+              {loading ? 'Verificando...' : 'Verificar con Cookie Standard'}
+            </button>
+            <button
+              onClick={() => checkCards(true)}
+              disabled={loading || regionalCookieStatus === 'inactive'}
+              className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 disabled:opacity-50"
+            >
+              {loading ? 'Verificando...' : 'Verificar con Cookie Regional'}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -372,9 +472,10 @@ const AmazonChecker = () => {
         <h3 className="text-lg font-medium text-blue-800 mb-3">Instrucciones</h3>
         <div className="space-y-2 text-sm text-blue-700">
           <p>1. <strong>Cookie:</strong> Guarda tu cookie de Amazon para poder verificar tarjetas.</p>
-          <p>2. <strong>Formato:</strong> Las tarjetas deben estar en formato cc|mm|aaaa|cvv</p>
-          <p>3. <strong>Límite:</strong> Máximo 15 tarjetas por consulta</p>
-          <p>4. <strong>Plan:</strong> Se requiere plan premium para usar esta función</p>
+          <p>2. <strong>Cookie Regional:</strong> Guarda tu cookie regional para integracion con el bot de Telegram.</p>
+          <p>3. <strong>Formato:</strong> Las tarjetas deben estar en formato cc|mm|aaaa|cvv</p>
+          <p>4. <strong>Límite:</strong> Máximo 15 tarjetas por consulta</p>
+          <p>5. <strong>Plan:</strong> Se requiere plan premium para usar esta función</p>
         </div>
       </div>
     </div>

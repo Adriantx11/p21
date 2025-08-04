@@ -213,6 +213,34 @@ class ApiService {
     return this.handleResponse(response);
   }
 
+  async getAmazonRegionalCookie() {
+    const response = await fetch(`${this.baseURL}/amazon/get-regional-cookie`, {
+      headers: this.getAuthHeaders()
+    });
+
+    return this.handleResponse(response);
+  }
+
+  async saveAmazonRegionalCookie(cookie) {
+    const response = await fetch(`${this.baseURL}/amazon/save-regional-cookie`, {
+      method: 'POST',
+      headers: this.getAuthHeaders(),
+      body: JSON.stringify({ cookie })
+    });
+
+    return this.handleResponse(response);
+  }
+  
+  async checkCardsWithRegionalCookie(cards) {
+    const response = await fetch(`${this.baseURL}/amazon/check-regional-cards`, {
+      method: 'POST',
+      headers: this.getAuthHeaders(),
+      body: JSON.stringify({ cards })
+    });
+
+    return this.handleResponse(response);
+  }
+
   async updateUserSubscription(userId, updates) {
     const response = await fetch(`${this.baseURL}/subscriptions/${userId}`, {
       method: 'PUT',
